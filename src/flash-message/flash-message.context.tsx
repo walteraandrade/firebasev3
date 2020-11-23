@@ -5,7 +5,11 @@ import { FlashMessageType } from "./flash-message.style";
 const sixSecondsTimer = 6000;
 
 interface FlashMessageContext {
-  showFlashMessage(message: string, type?: FlashMessageType): void;
+  showFlashMessage(
+    message: string,
+    type?: FlashMessageType,
+    permanent?: boolean
+  ): void;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -22,11 +26,18 @@ export const FlashMessageProvider: React.FC<{
   const [messageType, setMessageType] = useState<FlashMessageType | undefined>(
     undefined
   );
-  const showFlashMessage = (message: string, type: FlashMessageType): void => {
+
+  const showFlashMessage = (
+    message: string,
+    type: FlashMessageType,
+    permanent: boolean
+  ): void => {
     setFlashMessage(message);
     setMessageType(type);
-    setTimeout(() => setFlashMessage(undefined), sixSecondsTimer);
-    clearTimeout(sixSecondsTimer);
+    if (!permanent) {
+      setTimeout(() => setFlashMessage(undefined), sixSecondsTimer);
+      clearTimeout(sixSecondsTimer);
+    }
   };
 
   return (
